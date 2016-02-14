@@ -6,6 +6,7 @@
     "comma-dangle": 0,
     "no-console": 0,
     "react/jsx-no-bind": [0, {"allowBind": false}],
-    "max-len": [2, 120, 2]
+    "max-len": [2, 120, 2],
+    "padded-blocks": 0
   }
 }

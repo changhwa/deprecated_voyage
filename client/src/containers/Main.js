@@ -27,6 +27,12 @@ Main.propTypes = {
   children: PropTypes.node
 };
 
-function mapStateToProps(state) {return state;}
+function mapStateToProps(state) {
+
+  const { auth } = state;
+  const { isAuthenticated, name } = auth;
+
+  return { isAuthenticated, name };
+}
 
 export default connect(mapStateToProps)(Main);

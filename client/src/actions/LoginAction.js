@@ -1,51 +1,68 @@
-export const LOGIN_REQUEST = 'LOGIN_REQUEST';
-export const LOGIN_SUCCESS = 'LOGIN_SUCCESS';
-export const LOGIN_FAILURE = 'LOGIN_FAILURE';
+import * as types from '../constants/ActionTypes';
+import cookie from 'react-cookie';
+import { COOKIE_DEFAULT_CONFIG } from '../config/CookieConfig';
 
-function requestLogin(user) {
+const AUTH_API_ROOT = '/api/auth';
+
+function successLogout() {
+
+  // why can't remove to server?
+  cookie.remove('token', COOKIE_DEFAULT_CONFIG);
+  cookie.remove('name', COOKIE_DEFAULT_CONFIG);
+  cookie.remove('avatar_url', COOKIE_DEFAULT_CONFIG);
+
   return {
-    type: LOGIN_REQUEST,
-    isAuthenticated: false,
-    user
+    type: types.LOGOUT_SUCCESS,
+    isAuthenticated: false
   };
 }
 
-function loginSuccess(auth) {
+function requestLogout(param) {
+
   return {
-    type: LOGIN_SUCCESS,
-    isAuthenticated: true,
-    auth
+    type: types.LOGOUT_REQUEST,
+    payload: {
+
+      api: `${AUTH_API_ROOT}/logout`,
+      method: 'POST',
+      body: {
+        token: param.token
+      },
+      callback: (dispatch, response) => dispatch(successLogout(response))
+    }
   };
 }
 
-function loginError(message) {
-  return {
-    type: LOGIN_FAILURE,
-    isAuthenticated: false,
-    message
-  };
-}
+function fetchUser(dispatch, request) {
 
-export function loginUser(users) {
   const config = {
-    method: 'POST',
     headers: {
       'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(users)
+    }
   };
 
+  if (request && request.payload) {
+
+    config.body = JSON.stringify(request.payload.body);
+    config.method = request.payload.method;
+
+    return fetch(request.payload.api, config).then(response =>
+      response.json().then(auth => ({ auth, response }))
+    ).then(({ auth, response }) => {
+      if (!response.ok) {
+        console.log(' ERROR ');
+        return Promise.reject(auth);
+      }
+      request.payload.callback(dispatch, auth);
+    }).catch(err => console.error('ERROR: ', err));
+  }
+}
+
+
+export function logout(param) {
+
   return dispatch => {
-    dispatch(requestLogin(users));
-    return fetch('/api/user', config)
-      .then(response =>
-        response.json().then(auth => ({ auth, response }))
-      ).then(({ auth, response }) => {
-        if (!response.ok) {
-          dispatch(loginError(auth.message));
-          return Promise.reject(auth);
-        }
-        dispatch(loginSuccess(auth));
-      }).catch(err => console.log('Error: ', err));
+    const request = dispatch(requestLogout(param));
+    fetchUser(dispatch, request);
   };
 }
