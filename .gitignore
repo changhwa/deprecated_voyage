@@ -79,3 +79,6 @@ crashlytics-build.properties
 
 # Deploy
 dist
+
+db-dev.db
+db-prod.db
