@@ -5,7 +5,7 @@ import {
 
 function auth(state = {
   isAuthenticated: false
-}, action) {
+}, action = {}) {
   switch (action.type) {
     case LOGIN_REQUEST:
       return Object.assign({}, state, {

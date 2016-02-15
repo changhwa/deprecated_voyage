@@ -45,7 +45,7 @@ gulp.task("webpack-dev-server", ['set-env', 'lint'], function (callback) {
     webpackConfig = require('./webpack.dev.config');
 
   var compiler = webpack(webpackConfig);
-  var apiServer = "http://localhost:8080";
+  var apiServer = "http://localhost:3000";
 
   new WebpackDevServer(compiler, {
 
