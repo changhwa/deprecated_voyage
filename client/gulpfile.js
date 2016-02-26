@@ -51,6 +51,7 @@ gulp.task("webpack-dev-server", ['set-env', 'lint'], function (callback) {
 
     hot: true,
     stats: webpackCommonOpts,
+    historyApiFallback: true,
     proxy: {
       //API Server URL
       "/api/*": apiServer
