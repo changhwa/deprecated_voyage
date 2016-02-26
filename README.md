@@ -62,9 +62,9 @@ dist 폴더 참고 (index.html / [hash].js)
 
 ### Tasks
 
-- [ ] User
+- [X] User
     - [ ] facebook
-    - [ ] github
+    - [X] github
     - [ ] user sync 
 - [ ] Roles
 - [ ] Blogging
